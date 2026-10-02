@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -15,24 +18,26 @@ from routers import (
 from routers.resumes import candidate_router
 from routers.jobs import hr_jobs_router
 
+load_dotenv()
 
 app = FastAPI(
     title="HR Voice Agent API",
     version="1.0.0"
 )
 
+local_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+frontend_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("FRONTEND_URL", "").split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
-    allow_origin_regex=r"^http://(localhost|127\.0\.0\.1):517[3-9]$",
+    allow_origins=local_origins + frontend_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -58,3 +63,8 @@ def home():
     return {
         "message": "HR Voice Agent is running"
     }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
