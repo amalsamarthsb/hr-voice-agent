@@ -869,7 +869,7 @@ ${questionText}`,
       if (connectionError?.name === "NotAllowedError") {
         setPermissionBlocked(true);
         setError(
-          "Microphone access is blocked. Allow microphone access for localhost in your browser's site settings, and make sure Windows allows microphone access for desktop apps. Then choose Retry microphone access."
+          "Microphone access is blocked. Allow microphone access for this site in your browser settings, and make sure your operating system allows microphone access for the browser. Then choose Retry microphone access."
         );
       } else if (connectionError?.name === "NotFoundError") {
         setPermissionBlocked(true);
